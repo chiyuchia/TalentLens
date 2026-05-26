@@ -78,7 +78,7 @@ def serialize_candidate_detail(candidate: Candidate) -> dict:
             "raw_text": candidate.raw_text or "",
             "profile": serialize_profile(candidate.profile),
             "scores": [serialize_score(score) for score in candidate.scores],
-            "pdf_url": f"/api/candidates/{candidate.id}/pdf",
+            "pdf_url": f"/candidates/{candidate.id}/pdf",
         }
     )
     return data
