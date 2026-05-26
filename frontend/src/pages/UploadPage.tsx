@@ -7,7 +7,7 @@ import { EmptyState } from "../components/EmptyState";
 import { ParseStatusBadge } from "../components/StatusBadge";
 import { ResumeStreamViewer } from "../components/ResumeStreamViewer";
 import { Skeleton } from "../components/Skeleton";
-import { uploadApi } from "../lib/api";
+import { API_PREFIX, uploadApi } from "../lib/api";
 import type { CandidateDetail, CandidateSummary } from "../types/api";
 
 type QueueItem = CandidateSummary & {
@@ -102,7 +102,7 @@ export function UploadPage() {
   }
 
   function subscribeToUpload(uploadId: string) {
-    const source = new EventSource(`/api/uploads/${uploadId}/events`);
+    const source = new EventSource(`${API_PREFIX}/uploads/${uploadId}/events`, { withCredentials: true });
     const updateCandidate = (candidate: CandidateSummary | CandidateDetail, message?: string) => {
       setQueue((current) =>
         current.map((item) => (item.id === candidate.id ? { ...item, ...candidate, message } : item)),

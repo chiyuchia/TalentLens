@@ -8,7 +8,7 @@ import { AnimatedPage } from "../components/AnimatedPage";
 
 import { CandidateStatusBadge, ParseStatusBadge } from "../components/StatusBadge";
 import { TagInput } from "../components/TagInput";
-import { candidateApi, jobsApi, scoresApi } from "../lib/api";
+import { API_PREFIX, candidateApi, jobsApi, scoresApi } from "../lib/api";
 import { normalizeProfile } from "../lib/candidate-profile";
 import { parseJsonArray, statusLabels, stringifyJson } from "../lib/format";
 import type { CandidateStatus, ResumeProfile } from "../types/api";
@@ -514,7 +514,7 @@ export function CandidateDetailPage() {
           )}
           <div className="rounded-lg border border-border bg-muted/20 p-5 animate-fade-in-up-3">
             <h3 className="font-medium">原始 PDF</h3>
-            <iframe title="原始 PDF" src={candidate.pdf_url} className="mt-4 h-[34rem] w-full rounded-md border border-border bg-background" />
+            <iframe title="原始 PDF" src={`${API_PREFIX}${candidate.pdf_url}`} className="mt-4 h-[34rem] w-full rounded-md border border-border bg-background" />
           </div>
         </div>
         <div className="space-y-4 animate-fade-in-up-2">
