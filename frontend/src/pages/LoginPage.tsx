@@ -14,8 +14,8 @@ export function LoginPage() {
 
   const loginMutation = useMutation({
     mutationFn: authApi.login,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["auth", "session"] });
+    onSuccess: (data) => {
+      queryClient.setQueryData(["auth", "session"], data);
       navigate(from, { replace: true });
     },
   });
