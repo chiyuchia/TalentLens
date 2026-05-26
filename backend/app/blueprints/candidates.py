@@ -62,6 +62,21 @@ def get_candidate(candidate_id: int):
     return ok_response(serialize_candidate_detail(candidate))
 
 
+@candidates_bp.delete("/<int:candidate_id>")
+@require_auth
+def delete_candidate(candidate_id: int):
+    candidate = Candidate.query.get(candidate_id)
+    if not candidate:
+        return error_response("NOT_FOUND", "候选人不存在。", status=404)
+
+    if candidate.profile:
+        db.session.delete(candidate.profile)
+
+    db.session.delete(candidate)
+    db.session.commit()
+    return ok_response({"id": candidate_id, "deleted": True})
+
+
 @candidates_bp.patch("/<int:candidate_id>/profile")
 @require_auth
 def update_candidate_profile(candidate_id: int):

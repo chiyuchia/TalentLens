@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowDownWideNarrow,
   ArrowUpWideNarrow,
@@ -12,6 +12,7 @@ import {
   List,
   Search,
   SlidersHorizontal,
+  Trash2,
   X,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -108,6 +109,7 @@ export function CandidatesPage() {
     runCompare,
     isComparing,
   } = useCompareStore();
+  const queryClient = useQueryClient();
   const pageSize = pageSizeByView[view];
   const pageSizeOptions = pageSizeOptionsByView[view];
   const sort = `${sortDirection === "desc" ? "-" : ""}${sortField}`;
@@ -127,6 +129,14 @@ export function CandidatesPage() {
       }),
     placeholderData: (previousData) => previousData,
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: candidateApi.delete,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["candidates"] });
+    },
+  });
+
   const candidates = useMemo(
     () => candidatesQuery.data?.items ?? [],
     [candidatesQuery.data?.items],
@@ -462,6 +472,7 @@ export function CandidatesPage() {
                   <th className="px-4 py-3 font-medium">评分</th>
                   <th className="px-4 py-3 font-medium">解析</th>
                   <th className="px-4 py-3 font-medium">状态</th>
+                  <th className="px-4 py-3 font-medium text-right">操作</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -515,6 +526,21 @@ export function CandidatesPage() {
                       <td className="px-4 py-4">
                         <CandidateStatusBadge status={candidate.status} />
                       </td>
+                      <td className="px-4 py-4 text-right">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (window.confirm(`确定要删除候选人「${candidate.name || candidate.original_filename}」吗？`)) {
+                              deleteMutation.mutate(candidate.id);
+                            }
+                          }}
+                          disabled={deleteMutation.isPending}
+                          className="rounded-md p-2 text-red-600 hover:bg-red-50 transition-colors disabled:opacity-40"
+                          aria-label="删除候选人"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </td>
                     </tr>
                   );
                 })}
@@ -566,8 +592,21 @@ export function CandidatesPage() {
                       评分：{candidate.total_score ?? "--"}
                     </p>
                   </Link>
-                  <div className="mt-3">
+                  <div className="mt-3 flex items-center justify-between">
                     <CandidateStatusBadge status={candidate.status} />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (window.confirm(`确定要删除候选人「${candidate.name || candidate.original_filename}」吗？`)) {
+                          deleteMutation.mutate(candidate.id);
+                        }
+                      }}
+                      disabled={deleteMutation.isPending}
+                      className="rounded-md p-1.5 text-red-600 hover:bg-red-50 transition-colors disabled:opacity-40"
+                      aria-label="删除候选人"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
                   </div>
                 </div>
               );

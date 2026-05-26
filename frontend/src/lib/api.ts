@@ -108,6 +108,10 @@ export const candidateApi = {
       method: "POST",
       body: JSON.stringify({ candidate_ids: candidateIds }),
     }),
+  delete: (candidateId: number) =>
+    apiRequest<{ id: number; deleted: boolean }>(`/candidates/${candidateId}`, {
+      method: "DELETE",
+    }),
 };
 
 export const jobsApi = {

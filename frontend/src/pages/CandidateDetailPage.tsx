@@ -1,8 +1,9 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from "recharts";
 import { useParams } from "react-router-dom";
-import { User, Mail, Phone, MapPin, Cpu, GraduationCap, Briefcase, FolderGit2, Sparkles, Trophy, Edit3, Eye } from "lucide-react";
+import { User, Mail, Phone, MapPin, Cpu, GraduationCap, Briefcase, FolderGit2, Sparkles, Trophy, Edit3, Eye, Trash2 } from "lucide-react";
 
 import { AnimatedPage } from "../components/AnimatedPage";
 
@@ -103,6 +104,7 @@ export function CandidateDetailPage() {
   const { candidateId } = useParams();
   const numericCandidateId = Number(candidateId);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const candidateQuery = useQuery({
     queryKey: ["candidate", numericCandidateId],
     queryFn: () => candidateApi.get(numericCandidateId),
@@ -157,6 +159,14 @@ export function CandidateDetailPage() {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: () => candidateApi.delete(numericCandidateId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["candidates"] });
+      navigate("/candidates");
+    },
+  });
+
   const chartData = useMemo(() => {
     const score = candidateScores[0];
     if (!score) return [];
@@ -200,6 +210,19 @@ export function CandidateDetailPage() {
         <div className="flex items-center gap-2">
           <ParseStatusBadge status={candidate.parse_status} />
           <CandidateStatusBadge status={candidate.status} />
+          <button
+            type="button"
+            onClick={() => {
+              if (window.confirm(`确定要删除候选人「${profile.name || candidate.original_filename}」吗？`)) {
+                deleteMutation.mutate();
+              }
+            }}
+            disabled={deleteMutation.isPending}
+            className="rounded-md p-2 text-red-600 hover:bg-red-50 transition-colors disabled:opacity-40"
+            aria-label="删除候选人"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
         </div>
       </div>
       <div className="grid gap-4 xl:grid-cols-2 xl:items-start">
