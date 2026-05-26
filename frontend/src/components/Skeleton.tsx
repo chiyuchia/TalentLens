@@ -1,0 +1,11 @@
+import type { HTMLAttributes } from "react";
+
+export function Skeleton({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      aria-hidden="true"
+      className={`animate-pulse rounded-md bg-slate-200/80 dark:bg-slate-800/80 ${className}`}
+      {...props}
+    />
+  );
+}

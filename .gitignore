@@ -141,3 +141,40 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Project docs
+.claude/
+.codex/
+docs/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.python-version
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyre/
+.pytype/
+.coverage
+.coverage.*
+htmlcov/
+.venv/
+venv/
+ENV/
+env/
+pip-wheel-metadata/
+backend/instance/
+
+# TalentLens runtime data
+uploads/
+*.sqlite
+*.sqlite3
+
+# Production env examples are tracked explicitly
+!deploy/.env.production.example
+
+# Deploy environment files with secrets
+deploy/.env.production
+
