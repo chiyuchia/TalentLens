@@ -22,8 +22,9 @@ class Config:
     DEEPSEEK_BASE_URL = os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
     DEEPSEEK_MODEL = os.getenv("DEEPSEEK_MODEL", "deepseek-chat")
     SESSION_COOKIE_HTTPONLY = True
-    SESSION_COOKIE_SAMESITE = "Lax"
+    SESSION_COOKIE_SAMESITE = os.getenv("SESSION_COOKIE_SAMESITE", "Lax")
     SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "false").lower() == "true"
+    FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN", "")
     PERMANENT_SESSION_LIFETIME = timedelta(hours=12)
     MAX_CONTENT_LENGTH = 50 * 1024 * 1024
 

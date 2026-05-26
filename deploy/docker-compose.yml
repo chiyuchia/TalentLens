@@ -11,18 +11,8 @@ services:
     volumes:
       - talentlens_data:/data
       - talentlens_uploads:/uploads
-    expose:
-      - "8000"
-    restart: unless-stopped
-
-  web:
-    build:
-      context: ..
-      dockerfile: frontend/Dockerfile
-    depends_on:
-      - backend
     ports:
-      - "127.0.0.1:8080:80"
+      - "127.0.0.1:8000:8000"
     restart: unless-stopped
 
 volumes:

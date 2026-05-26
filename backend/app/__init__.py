@@ -1,4 +1,7 @@
+import os
+
 from flask import Flask
+from flask_cors import CORS
 from werkzeug.exceptions import HTTPException
 
 from .blueprints.auth import auth_bp
@@ -21,6 +24,10 @@ def create_app(test_config: dict | None = None) -> Flask:
 
     Config.validate(app.config)
     Config.prepare_runtime_paths(app)
+
+    origin = app.config.get("FRONTEND_ORIGIN", "")
+    if origin:
+        CORS(app, origins=[origin], supports_credentials=True)
 
     db.init_app(app)
 

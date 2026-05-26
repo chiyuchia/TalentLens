@@ -14,7 +14,7 @@ import type {
 } from "../types/api";
 import { ApiError } from "./errors";
 
-const API_PREFIX = "/api";
+const API_PREFIX = import.meta.env.VITE_API_BASE_URL || "/api";
 
 type QueryParamPrimitive = string | number;
 type QueryParams = Record<string, QueryParamPrimitive | QueryParamPrimitive[] | undefined>;
